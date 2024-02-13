@@ -27,7 +27,7 @@ int main() {
 
         bool validChoice = false;
         do {
-            std::cout << "Continue? Y/N : ";
+            std::cout << "Continue? Y/N. ";
             std::cin >> choice;
             if (choice == 'Y' || choice == 'y' || choice == 'N' || choice == 'n') {
                 validChoice = true;
