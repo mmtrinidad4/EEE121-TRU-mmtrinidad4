@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 bool isPrime(int number) {
     if (number <= 1) {
@@ -18,22 +19,35 @@ int main() {
     do {
         invalidInput = false;
         int inputNumber;
-        std::cout << "INPUT AN INTEGER: ";
-        std::cin >> inputNumber;
-        
-        if (isPrime(inputNumber)) {
-            std::cout << inputNumber << " IS A PRIME NUMBER" << std::endl;
+        std::cout << "INPUT AN INTEGER : ";
+        if (!(std::cin >> inputNumber)) {
+            std::cout << std::endl;
+            std::cout << "Invalid input. Please input an integer." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            invalidInput = true;
         } else {
-            std::cout << inputNumber << " IS NOT A PRIME NUMBER" << std::endl;
+            std::cout << std::endl;
+            if (isPrime(inputNumber)) {
+                std::cout << inputNumber << " IS A PRIME NUMBER" << std::endl;
+            } else {
+                std::cout << inputNumber << " IS NOT A PRIME NUMBER" << std::endl;
+            }
         }
 
-        std::cout << "Do you want to continue? (Y/N): ";
-        std::cin >> choice;
-        if (choice != 'N' && choice != 'n' && choice != 'Y' && choice != 'y') {
-            std::cerr << "Invalid input. Program terminated." << std::endl;
-            return 1; // Exit the program with an error status
+        if (!invalidInput) {
+            std::cout << std::endl;
+            std::cout << "Continue? Y/N. ";
+            std::cin >> choice;
+            if (choice != 'N' && choice != 'n' && choice != 'Y' && choice != 'y') {
+                std::cout << "Invalid input. Please input Y or N." << std::endl;
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                invalidInput = true;
+            }
         }
-    } while (choice != 'N' && choice != 'n');
+        std::cout << std::endl;
+    } while (!invalidInput && (choice == 'Y' || choice == 'y'));
 
     return 0;
 }
