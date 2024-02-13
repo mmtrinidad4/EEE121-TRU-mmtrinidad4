@@ -32,7 +32,9 @@ int main() {
             if (choice == 'Y' || choice == 'y' || choice == 'N' || choice == 'n') {
                 validChoice = true;
             } else {
+                std::cout << std::endl;
                 std::cerr << "Invalid choice. Please enter Y or N." << std::endl;
+                std::cout << std::endl;
             }
         } while (!validChoice);
 
