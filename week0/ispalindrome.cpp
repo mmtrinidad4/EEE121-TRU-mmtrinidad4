@@ -14,18 +14,20 @@ int main() {
     char choice;
     do {
         std::string inputString;
-        std::cout << "INPUT A STRING: ";
+        std::cout << "INPUT A STRING : ";
         std::cin >> inputString;
+        std::cout << std::endl;
 
         if (isPalindrome(inputString)) {
-            std::cout << inputString << " IS A PALINDROME" << std::endl;
+            std::cout << inputString <<" IS A PALINDROME" << std::endl;
         } else {
-            std::cout << inputString << " IS NOT A PALINDROME" << std::endl;
+            std::cout << inputString <<" IS NOT A PALINDROME" << std::endl; 
         }
+        std::cout << std::endl;
 
         bool validChoice = false;
         do {
-            std::cout << "Do you want to continue? (Y/N): ";
+            std::cout << "Continue? Y/N : ";
             std::cin >> choice;
             if (choice == 'Y' || choice == 'y' || choice == 'N' || choice == 'n') {
                 validChoice = true;
@@ -33,6 +35,8 @@ int main() {
                 std::cerr << "Invalid choice. Please enter Y or N." << std::endl;
             }
         } while (!validChoice);
+
+        std::cout << std::endl;
 
     } while (choice == 'Y' || choice == 'y');
 
