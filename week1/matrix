@@ -38,8 +38,9 @@ void printMatrix(const vector<vector<int>>& matrixData) {
 // get element
 void getElement(const vector<vector<int>>& matrixData, int row, int column) {
     if (row > 0 && row <= matrixData.size() && column > 0 && column <= matrixData[0].size()) {
-        cout << '\n' << "MATRIX [" << row << "][" << column << "] = " << matrixData[row - 1][column - 1] << endl;
+        cout << '\n' << "MATRIX[" << row << "][" << column << "] = " << matrixData[row - 1][column - 1] << endl;
     } else {
+        cout << endl;
         cout << "\nUNSUPPORTED COMMAND" << endl;
     }
     
@@ -52,8 +53,9 @@ void setElement(vector<vector<int>>& matrixData, int row, int column, int value)
     if (row > 0 && row <= matrixData.size() && column > 0 && column <= matrixData[0].size()) {
         if (value >= 0 && value <= 99) { // Ensure value is between 0 and 99
             matrixData[row - 1][column - 1] = value;
-            cout << "MATRIX [" << row << "][" << column << "] = " << value << endl;
+            cout << "MATRIX[" << row << "][" << column << "] = " << value << endl;
         } else {
+            cout << endl;
             cout << "\nUNSUPPORTED COMMAND" << endl;
         }
     } else {
@@ -95,6 +97,7 @@ void swapRows(vector<vector<int>>& matrixData, int row1, int row2) {
         cout << endl;
         cout << "SWAPPED ROWS " << row1 + 1 << " AND " << row2 + 1 << endl; // Adjust back to 1-based indexing
     } else {
+        cout << endl;
         cout << "\nUNSUPPORTED COMMAND" << endl;
     }
     cout << endl;
@@ -121,7 +124,9 @@ int main() {
         if (command == "INIT") {
             int rows, columns;
             if (!(ss >> rows)) {
+                cout << endl;
                 cout << "UNSUPPORTED COMMAND" << endl;
+                cout << endl;
             } else if (!(ss >> columns)) {
                 initializeMatrix(matrixData, rows);
             } else {
@@ -134,19 +139,25 @@ int main() {
             if (ss >> row >> column) {
                 getElement(matrixData, row, column);
             } else {
+                cout << endl;
                 cout << "UNSUPPORTED COMMAND" << endl;
+                cout << endl;
             }
         } else if (command == "SET") {
             int row, column, value;
             if (ss >> row >> column >> value) {
                 setElement(matrixData, row, column, value);
             } else {
+                cout << endl;
                 cout << "UNSUPPORTED COMMAND" << endl;
+                cout << endl;
             }
         } else if (command == "TRANSPOSE") {
             string extra;
             if (ss >> extra){
+                cout << endl;
                 cout << "UNSUPPORTED COMMAND" << endl;
+                cout << endl;
             } else {
                 transposeMatrix(matrixData);
             }
@@ -155,15 +166,18 @@ int main() {
             if (ss >> row1 >> row2) {
                 swapRows(matrixData, row1, row2);
             } else {
+                cout << endl;
                 cout << "UNSUPPORTED COMMAND" << endl;
+                cout << endl;
             }
         } else if (command == "EXIT") {
             break;
         } else {
+            cout << endl;
             cout << "UNSUPPORTED COMMAND" << endl;
+            cout << endl;
         }
     }
 
     return 0;
 }
-
