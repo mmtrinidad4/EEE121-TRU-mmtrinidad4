@@ -14,7 +14,7 @@ void initializeMatrix(vector<vector<int>>& matrixData, int rows, int columns = -
     for (int i = 0; i < rows; ++i) {
         matrixData[i].resize((columns == -1) ? rows : columns);
         for (int j = 0; j < matrixData[i].size(); ++j) {
-            matrixData[i][j] = rand() % 100; // Ensures values are between 0 and 99
+            matrixData[i][j] = rand() % 100; // 0-99 values
         }
     }
 
@@ -40,7 +40,6 @@ void getElement(const vector<vector<int>>& matrixData, int row, int column) {
     if (row > 0 && row <= matrixData.size() && column > 0 && column <= matrixData[0].size()) {
         cout << '\n' << "MATRIX[" << row << "][" << column << "] = " << matrixData[row - 1][column - 1] << endl;
     } else {
-        cout << endl;
         cout << "\nUNSUPPORTED COMMAND" << endl;
     }
     
@@ -51,7 +50,7 @@ void getElement(const vector<vector<int>>& matrixData, int row, int column) {
 void setElement(vector<vector<int>>& matrixData, int row, int column, int value) {
     cout << endl;
     if (row > 0 && row <= matrixData.size() && column > 0 && column <= matrixData[0].size()) {
-        if (value >= 0 && value <= 99) { // Ensure value is between 0 and 99
+        if (value >= 0 && value <= 99) { 
             matrixData[row - 1][column - 1] = value;
             cout << "MATRIX[" << row << "][" << column << "] = " << value << endl;
         } else {
@@ -95,7 +94,7 @@ void swapRows(vector<vector<int>>& matrixData, int row1, int row2) {
             swap(matrixData[row1][i], matrixData[row2][i]);
         }
         cout << endl;
-        cout << "SWAPPED ROWS " << row1 + 1 << " AND " << row2 + 1 << endl; // Adjust back to 1-based indexing
+        cout << "SWAPPED ROWS " << row1 + 1 << " AND " << row2 + 1 << endl; // indexing
     } else {
         cout << endl;
         cout << "\nUNSUPPORTED COMMAND" << endl;
@@ -139,7 +138,6 @@ int main() {
             if (ss >> row >> column) {
                 getElement(matrixData, row, column);
             } else {
-                cout << endl;
                 cout << "UNSUPPORTED COMMAND" << endl;
                 cout << endl;
             }
@@ -180,4 +178,4 @@ int main() {
     }
 
     return 0;
-}
+} //
