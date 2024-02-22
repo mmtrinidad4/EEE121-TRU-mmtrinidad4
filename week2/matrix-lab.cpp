@@ -1,6 +1,6 @@
 #include "Matrix.h"
 #include "MatrixMxN.h"
-#include "MatrixNxN.h" // Make sure to include MatrixNxN.h if it's a separate header
+#include "MatrixNxN.h"
 
 #include <iostream>
 #include <string>
@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <sstream>
-#include <variant> // Include the variant header
+#include <variant> 
 
 using namespace std;
 
@@ -18,7 +18,7 @@ int main() {
     MatrixNxN nmatrix;
     MatrixMxN mmatrix;
     string input;
-    vector<std::variant<MatrixMxN, MatrixNxN>> objs; // Using std::variant to hold objects of different types
+    vector<std::variant<MatrixMxN, MatrixNxN>> objs; 
     
     while (true) {
         cout << endl << "> ";
@@ -32,22 +32,22 @@ int main() {
 
         if (command == "INIT") {
             string name;
-            int rows, columns, cols; // Declaring cols here
+            int rows, columns, cols;
             if (!(ss >> name) || !(ss >> rows) || rows == 0 || !(ss >> columns) || columns == 0) {
                 cout << "UNSUPPORTED COMMAND" << endl;
             }
             else {
                 if (ss.peek() != EOF) {
                     cout << "Too many arguments for INIT command" << endl;
-                    continue; // Skip to the next iteration of the loop
+                    continue; 
                 }
                 if (ss.fail()) {
                     cout << "Invalid argument for INIT command" << endl;
-                    continue; // Skip to the next iteration of the loop
+                    continue; 
                 }
                 if (ss.bad()) {
                     cout << "Input stream failure" << endl;
-                    break; // Exit the loops
+                    break; 
                 }
 
                 if (ss >> cols) {
@@ -63,15 +63,15 @@ int main() {
             cout << "\nUNSUPPORTED COMMAND" << endl;
         }
         
-        // Rest of your code
+        
         for (auto& obj : objs) {
             if (holds_alternative<MatrixMxN>(obj)) {
                 MatrixMxN& mmn = get<MatrixMxN>(obj);
-                // Handle MatrixMxN operations
+               
             }
             else if (holds_alternative<MatrixNxN>(obj)) {
                 MatrixNxN& mnn = get<MatrixNxN>(obj);
-                // Handle MatrixNxN operations
+             
             }
         }
     }
