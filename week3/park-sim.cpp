@@ -1,16 +1,23 @@
+// PARK-SIM
+
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <algorithm>
 #include <ctime>
 #include <iomanip>
-#include <algorithm>
-#include <sstream>
 
 using namespace std;
 
+// 500
 const int max_main_entries = 500;
+
+//1000
 const int max_history_entries = 1000;
 
 class Parking_Entry {
+
+// priv
 private:
     string plate;
     string brand;
@@ -21,9 +28,13 @@ private:
     int totalHours;
     int totalCost;
 
+// pub
 public:
     Parking_Entry(string plate, string brand, string model, int year)
         : plate(plate), brand(brand), model(model), year(year), entry_Time(time(nullptr)), exit_Time(0), totalCost(0), totalHours(0) {}
+
+// PLATE TIME: EXIT AND ENTRY
+// TOTAL HOURS COST
 
     string get_Plate() const {
         return plate;
@@ -75,7 +86,10 @@ private:
     vector<Parking_Entry> mainDatabase;
     vector<Parking_Entry> historyDatabase;
 
+
 public:
+
+// PARK
     void park(string plate, string brand, string model, int year) {
         if (mainDatabase.size() >= max_main_entries) {
             cout << "UNSUPPORTED COMMAND" << endl;
@@ -88,13 +102,15 @@ public:
         cout << endl;
     }
 
+
+// EXIT COMMAND
     void exit(string plate) {
         auto it = find_if(mainDatabase.begin(), mainDatabase.end(), [&](const Parking_Entry& entry) { return entry.get_Plate() == plate; });
 
         if (it != mainDatabase.end()) {
             time_t currentTime = time(nullptr);
             it->setExit_Time(currentTime);
-            int totalHours = max(1, static_cast<int>((difftime(it->getExit_Time(), it->getEntry_Time()) + 3599) / 3600));
+            int totalHours = max(1, static_cast<int>((difftime(it->getExit_Time(), it->getEntry_Time()) + 3599) / 3600)); // 3600s in an hour
             int totalCost = 50 + max(0, totalHours - 3) * 20;
             it->setTotalHours(totalHours);
             it->setTotalCost(totalCost);
@@ -117,6 +133,7 @@ public:
         }
     }
 
+// FIND COMMAND
     void find(string plate) {
         auto it = find_if(mainDatabase.begin(), mainDatabase.end(), [&](const Parking_Entry& entry) { return entry.get_Plate() == plate; });
 
@@ -137,6 +154,7 @@ public:
         }
     }
 
+// LIST
     void list() {
         cout << "LIST" << endl;
         cout << endl;
@@ -150,6 +168,7 @@ public:
         cout << endl;
     }
 
+// LOG
     void log() {
         cout << "LOG" << endl;
         cout << endl;
@@ -176,6 +195,8 @@ private:
         return string(buffer);
     }
 };
+
+// MAIN
 
 int main() {
     ParkingSystem parkingSystem;
