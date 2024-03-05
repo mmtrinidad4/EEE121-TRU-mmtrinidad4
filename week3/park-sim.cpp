@@ -1,251 +1,165 @@
-// PARK-SIM
-
+#include <cstdlib>
+#include <sstream>
 #include <iostream>
 #include <vector>
-#include <sstream>
-#include <algorithm>
 #include <ctime>
-#include <iomanip>
 
 using namespace std;
 
-// 500
-const int max_main_entries = 500;
+void printCSV(string plate, string inTime, string outTime, string hours, string fee, string day, string date, string brand, string model, string year) {
+    cout << plate << "," << inTime << "," << outTime << "," << hours << "," << fee << "," << day << "," << date << "," << brand << "," << model << "," << year << endl;
+}
 
-//1000
-const int max_history_entries = 1000;
+string convertDate(string month, string day, string yr) {
+    string monthNum;
+    if (month == "Jan") monthNum = "01";
+    else if (month == "Feb") monthNum = "02";
+    else if (month == "Mar") monthNum = "03";
+    else if (month == "Apr") monthNum = "04";
+    else if (month == "May") monthNum = "05";
+    else if (month == "Jun") monthNum = "06";
+    else if (month == "Jul") monthNum = "07";
+    else if (month == "Aug") monthNum = "08";
+    else if (month == "Sep") monthNum = "09";
+    else if (month == "Oct") monthNum = "10";
+    else if (month == "Nov") monthNum = "11";
+    else if (month == "Dec") monthNum = "12";
 
-class Parking_Entry {
+    string day2Digit;
+    if (stoi(day) < 10) day2Digit = "0" + day;
+    else day2Digit = day;
 
-// priv
-private:
-    string plate;
-    string brand;
-    string model;
-    int year;
-    time_t entry_Time;
-    time_t exit_Time;
-    int totalHours;
-    int totalCost;
+    string yr2Digit = to_string(stoi(yr) - 2000);
 
-// pub
-public:
-    Parking_Entry(string plate, string brand, string model, int year)
-        : plate(plate), brand(brand), model(model), year(year), entry_Time(time(nullptr)), exit_Time(0), totalCost(0), totalHours(0) {}
-
-// PLATE TIME: EXIT AND ENTRY
-// TOTAL HOURS COST
-
-    // PLATE
-    string get_Plate() const {
-        return plate;
-    }
-
-    // ENTRY TIME
-    time_t getEntry_Time() const {
-        return entry_Time;
-    }
-
-    // EXIT TIME
-    time_t getExit_Time() const {
-        return exit_Time;
-    }
-
-    // SET
-    void setExit_Time(time_t exit_Time) {
-        this->exit_Time = exit_Time;
-    }
-
-    // TOT HRS
-    void setTotalHours(int totalHours) {
-        this->totalHours = totalHours;
-    }
-
-    // TOT HRS
-    int getTotalHours() const {
-        return totalHours;
-    }
-
-    // TOTAL COST
-    int getTotalCost() const {
-        return totalCost;
-    }
-
-    // SET
-    void setTotalCost(int totalCost) {
-        this->totalCost = totalCost;
-    }
-
-    // BRAND
-    string getBrand() const {
-        return brand;
-    }
-
-    // STR MODEL
-    string getModel() const {
-        return model;
-    }
-
-    // YEAR
-    int getYear() const {
-        return year;
-    }
-};
-
-// CLASS A
-class ParkingSystem {
-
-private:
-    // MAIN & HISTORY
-    vector<Parking_Entry> mainDatabase;
-    vector<Parking_Entry> historyDatabase;
-
-
-public:
-
-// PARK
-    void park(string plate, string brand, string model, int year) {
-        if (mainDatabase.size() >= max_main_entries) {
-            cout << "UNSUPPORTED COMMAND" << endl;
-            return;
-        }
-
-        Parking_Entry newEntry(plate, brand, model, year);
-        mainDatabase.push_back(newEntry);
-        cout << "PARK " << plate << " " << brand << " " << model << " " << year << endl;
-        cout << endl;
-    }
-
-
-// EXIT COMMAND
-    void exit(string plate) {
-        auto it = find_if(mainDatabase.begin(), mainDatabase.end(), [&](const Parking_Entry& entry) { return entry.get_Plate() == plate; });
-
-        if (it != mainDatabase.end()) {
-            time_t currentTime = time(nullptr);
-            it->setExit_Time(currentTime);
-            int totalHours = max(1, static_cast<int>((difftime(it->getExit_Time(), it->getEntry_Time()) + 3599) / 3600)); // 3600s in an hour
-            int totalCost = 50 + max(0, totalHours - 3) * 20;
-            it->setTotalHours(totalHours);
-            it->setTotalCost(totalCost);
-
-            Parking_Entry historyEntry = *it;
-            historyDatabase.push_back(historyEntry);
-            mainDatabase.erase(it);
-            cout << "EXIT " << plate << endl;
-            cout << endl;
-            cout << plate << "," << formatTime(historyEntry.getEntry_Time()) << ","
-                 << (historyEntry.getExit_Time() == 0 ? "NONE" : formatTime(historyEntry.getExit_Time())) << ","
-                 << historyEntry.getTotalHours() << ","
-                 << "P" << historyEntry.getTotalCost() << "," << formatEntryDate(historyEntry.getEntry_Time()) << ","
-                 << historyEntry.getBrand() << "," << historyEntry.getModel() << "," << historyEntry.getYear() << endl;
-            cout << endl;
-        } else {
-            cout << endl;
-            cout << "CAR NOT FOUND" << endl;
-            cout << endl;
-        }
-    }
-
-// FIND COMMAND
-    void find(string plate) {
-        auto it = find_if(mainDatabase.begin(), mainDatabase.end(), [&](const Parking_Entry& entry) { return entry.get_Plate() == plate; });
-
-        if (it != mainDatabase.end()) {
-            cout << "FIND " << plate << endl;
-            cout << endl;
-            cout << it->get_Plate() << "," << formatTime(it->getEntry_Time()) << ","
-                 << (it->getExit_Time() == 0 ? "NONE" : formatTime(it->getExit_Time())) << ","
-                 << it->getTotalHours() << ","
-                 << "P" << it->getTotalCost() << "," << formatEntryDate(it->getEntry_Time()) << ","
-                 << it->getBrand() << "," << it->getModel() << "," << it->getYear() << endl;
-            cout << endl;
-        } else {
-            cout << "FIND " << plate << endl;
-            cout << endl;
-            cout << "CAR NOT FOUND" << endl;
-            cout << endl;
-        }
-    }
-
-// LIST
-    void list() {
-        cout << "LIST" << endl;
-        cout << endl;
-        for (const auto& entry : mainDatabase) {
-            cout << entry.get_Plate() << "," << formatTime(entry.getEntry_Time()) << ","
-                 << (entry.getExit_Time() == 0 ? "NONE" : formatTime(entry.getExit_Time())) << ","
-                 << entry.getTotalHours() << ","
-                 << "P" << entry.getTotalCost() << "," << formatEntryDate(entry.getEntry_Time()) << ","
-                 << entry.getBrand() << "," << entry.getModel() << "," << entry.getYear() << endl;
-        }
-        cout << endl;
-    }
-
-// LOG
-    void log() {
-        cout << "LOG" << endl;
-        cout << endl;
-        for (const auto& entry : historyDatabase) {
-            cout << entry.get_Plate() << "," << formatTime(entry.getEntry_Time()) << ","
-                 << formatTime(entry.getExit_Time()) << ","
-                 << entry.getTotalHours() << ","
-                 << "P" << entry.getTotalCost() << "," << formatEntryDate(entry.getEntry_Time()) << ","
-                 << entry.getBrand() << "," << entry.getModel() << "," << entry.getYear() << endl;
-        }
-        cout << endl;
-    }
-
-private:
-    string formatTime(time_t timestamp) {
-        char buffer[9];
-        strftime(buffer, sizeof(buffer), "%T", localtime(&timestamp));
-        return string(buffer);
-    }
-
-    string formatEntryDate(time_t timestamp) {
-        char buffer[20];
-        strftime(buffer, sizeof(buffer), "%a,%m/%d/%y", localtime(&timestamp));
-        return string(buffer);
-    }
-};
-
-// MAIN
+    return monthNum + "/" + day2Digit + "/" + yr2Digit;
+}
 
 int main() {
-    ParkingSystem parkingSystem;
     string command;
+    string argument;
+    vector<string> syntax;
+    int index;
+    string timeElement;
+    vector<string> timeString;
+    vector<vector<string>> carsParked;
+    vector<vector<string>> carLog;
 
     while (true) {
+        int currentSize = carsParked.size();
+        int logSize = carLog.size();
+        string y = "";
+
+        syntax.clear();
         cout << "> ";
         getline(cin, command);
+        cout << command << endl;
+        stringstream parse(command);
+        index = 0;
+        while (parse >> argument) {
+            syntax.push_back(argument);
+            index += 1;
+        }
+        for (index; index <= 5; index += 1) {
+            syntax.push_back("_");
+        }
 
-        if (command.find("PARK") == 0) {
-            istringstream iss(command);
-            string cmd, plate, brand, model;
-            int year;
-            iss >> cmd >> plate >> brand >> model >> year;
-            parkingSystem.park(plate, brand, model, year);
-        } else if (command.find("EXIT") == 0) {
-            istringstream iss(command);
-            string cmd, plate;
-            iss >> cmd >> plate;
-            parkingSystem.exit(plate);
-        } else if (command.find("FIND") == 0) {
-            istringstream iss(command);
-            string cmd, plate;
-            iss >> cmd >> plate;
-            parkingSystem.find(plate);
-        } else if (command.find("LIST") == 0) {
-            parkingSystem.list();
-        } else if (command.find("LOG") == 0) {
-            parkingSystem.log();
-        } else if (command == "QUIT") {
-            cout << "QUIT" << endl;
+        timeString.clear();
+        time_t currentTime = time(0);
+        char* timeLog = ctime(&currentTime);
+        stringstream split(timeLog);
+        while (split >> timeElement) {
+            timeString.push_back(timeElement);
+        }
+
+        if (syntax[0] == "PARK" && syntax[1] != "_" && syntax[2] != "_" && syntax[3] != "_" && syntax[4] != "_" && syntax[5] == "_") {
+            if (currentSize <= 500) {
+                vector<string> car;
+                car.resize(10);
+                string entryTime = timeString[3];
+                string day = timeString[0];
+                string date = convertDate(timeString[1], timeString[2], timeString[4]);
+                car = { syntax[1], entryTime, "NONE", "0", "P0", day, date, syntax[2], syntax[3], syntax[4] };
+                carsParked.push_back(car);
+                cout << "\n";
+            } else {
+                cout << "\nUNSUPPORTED COMMAND\n\n";
+            }
+        } else if (syntax[0] == "LIST" && syntax[1] == "_") {
+            if (currentSize != 0) {
+                cout << "\n";
+                for (int x = 0; x < currentSize; x += 1) {
+                    printCSV(carsParked[x][0], carsParked[x][1], carsParked[x][2], carsParked[x][3], carsParked[x][4], carsParked[x][5], carsParked[x][6], carsParked[x][7], carsParked[x][8], carsParked[x][9]);
+                }
+                cout << "\n";
+            } else {
+                cout << "\nUNSUPPORTED COMMAND\n\n";
+            }
+        } else if (syntax[0] == "FIND" && syntax[1] != "_" && syntax[2] == "_") {
+            cout << "\n";
+            for (int x = 0; x < currentSize; x += 1) {
+                if (carsParked[x][0] == syntax[1]) {
+                    printCSV(carsParked[x][0], carsParked[x][1], carsParked[x][2], carsParked[x][3], carsParked[x][4], carsParked[x][5], carsParked[x][6], carsParked[x][7], carsParked[x][8], carsParked[x][9]);
+                    y = carsParked[x][0];
+                }
+            }
+            if (y != syntax[1]) {
+                cout << "CAR NOT FOUND\n";
+            }
+            cout << "\n";
+        } else if (syntax[0] == "EXIT" && syntax[1] != "_" && syntax[2] == "_") {
+            cout << endl;
+            if (logSize <= 1000) {
+                int z = 0;
+                string exitTime = timeString[3];
+                string inHr, inMin, outHr, outMin;
+                int hours = 1;
+                int cost = 50;
+                for (int x = 0; x < currentSize; x += 1) {
+                    if (carsParked[x][0] == syntax[1]) {
+                        y = carsParked[x][0];
+                        z = x;
+                        carsParked[x][2] = exitTime;
+                        inHr += carsParked[x][1][0];
+                        inHr += carsParked[x][1][1];
+                        inMin += carsParked[x][1][3];
+                        inMin += carsParked[x][1][4];
+                        outHr += carsParked[x][2][0];
+                        outHr += carsParked[x][2][1];
+                        outMin += carsParked[x][2][3];
+                        outMin += carsParked[x][2][4];
+                        hours += stoi(outHr) - stoi(inHr);
+                        if ((stoi(outMin) - stoi(inMin)) < 0) hours -= 1;
+                        if (hours > 3) cost += (hours - 3) * 20;
+                        carsParked[x][3] = to_string(hours);
+                        carsParked[x][4] = "P" + to_string(cost);
+                        carLog.push_back(carsParked[x]);
+                    }
+                }
+                if (y != syntax[1]) {
+                    cout << "\nCAR NOT FOUND\n";
+                }
+                if (y == syntax[1]) {
+                    printCSV(carsParked[z][0], carsParked[z][1], carsParked[z][2], carsParked[z][3], carsParked[z][4], carsParked[z][5], carsParked[z][6], carsParked[z][7], carsParked[z][8], carsParked[z][9]);
+                    carsParked.erase(carsParked.begin() + z);
+                }
+                cout << "\n";
+            } else {
+                cout << "\nUNSUPPORTED COMMAND\n\n";
+            }
+        } else if (syntax[0] == "LOG" && syntax[1] == "_") {
+            if (logSize != 0) {
+                cout << "\n";
+                for (int x = 0; x < logSize; x += 1) {
+                    printCSV(carLog[x][0], carLog[x][1], carLog[x][2], carLog[x][3], carLog[x][4], carLog[x][5], carLog[x][6], carLog[x][7], carLog[x][8], carLog[x][9]);
+                }
+                cout << "\n";
+            } else {
+                cout << "\nUNSUPPORTED COMMAND\n\n";
+            }
+        } else if (syntax[0] == "QUIT" && syntax[1] == "_") {
             break;
         } else {
-            cout << "UNSUPPORTED COMMAND" << endl;
-            cout << endl;
+            cout << "\nUNSUPPORTED COMMAND\n\n";
         }
     }
 
