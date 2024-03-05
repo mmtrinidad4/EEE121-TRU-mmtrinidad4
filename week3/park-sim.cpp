@@ -36,53 +36,67 @@ public:
 // PLATE TIME: EXIT AND ENTRY
 // TOTAL HOURS COST
 
+    // PLATE
     string get_Plate() const {
         return plate;
     }
 
+    // ENTRY TIME
     time_t getEntry_Time() const {
         return entry_Time;
     }
 
+    // EXIT TIME
     time_t getExit_Time() const {
         return exit_Time;
     }
 
+    // SET
     void setExit_Time(time_t exit_Time) {
         this->exit_Time = exit_Time;
     }
 
-    int getTotalHours() const {
-        return totalHours;
-    }
-
+    // TOT HRS
     void setTotalHours(int totalHours) {
         this->totalHours = totalHours;
     }
 
+    // TOT HRS
+    int getTotalHours() const {
+        return totalHours;
+    }
+
+    // TOTAL COST
     int getTotalCost() const {
         return totalCost;
     }
 
+    // SET
     void setTotalCost(int totalCost) {
         this->totalCost = totalCost;
     }
 
+    // BRAND
     string getBrand() const {
         return brand;
     }
 
+    // STR MODEL
     string getModel() const {
         return model;
     }
 
+    // YEAR
     int getYear() const {
         return year;
     }
 };
 
+// CLASS A
 class ParkingSystem {
+
 private:
+    // MAIN & HISTORY
     vector<Parking_Entry> mainDatabase;
     vector<Parking_Entry> historyDatabase;
 
