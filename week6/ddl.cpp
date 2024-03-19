@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// Define VehicleInfo struct
+// VEHICLE INFO
 struct VehicleInfo {
     string plateNumber;
     string brand;
@@ -18,7 +18,7 @@ struct VehicleInfo {
     int intYear;
 };
 
-// Define ParkEntryNode class
+// PARKENTRYNODE CLASS
 template<typename S>
 class ParkEntryNode {
 public:
@@ -31,7 +31,7 @@ public:
 template<typename S>
 ParkEntryNode<S>::ParkEntryNode(S data, ParkEntryNode* next, ParkEntryNode* prev) : data(data), next(next), prev(prev) {}
 
-// Define ParkEntryList class
+// PARKENTRYLIST CLASS
 template<typename T>
 class ParkEntryList {
 private:
@@ -64,7 +64,7 @@ void ParkEntryList<T>::addBack(T val) {
 template<typename T>
 T ParkEntryList<T>::removeFront() {
     if (size == 0) {
-        throw runtime_error("List is empty");
+        throw runtime_error("UNSUPPORTED COMMAND");
     }
     ParkEntryNode<T>* temp = head->next;
     head->next = temp->next;
@@ -78,7 +78,7 @@ T ParkEntryList<T>::removeFront() {
 template<typename T>
 T ParkEntryList<T>::front() {
     if (size == 0) {
-        throw runtime_error("List is empty");
+        throw runtime_error("UNSUPPORTED COMMAND");
     }
     return head->next->data;
 }
@@ -88,7 +88,7 @@ int ParkEntryList<T>::getSize() {
     return size;
 }
 
-// Define ParkingSystem class
+// PARKING SYSTEM CLASS
 class ParkingSystem {
 private:
     ParkEntryList<VehicleInfo> entries;
@@ -176,7 +176,7 @@ public:
     }
 };
 
-// Main function
+// MAIN FUNCTION
 int main() {
     srand(time(nullptr));
 
